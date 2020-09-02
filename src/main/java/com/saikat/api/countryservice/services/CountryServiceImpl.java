@@ -3,6 +3,7 @@ package com.saikat.api.countryservice.services;
 import com.saikat.api.countryservice.exceptions.NoPropertiesDefinedException;
 import com.saikat.api.countryservice.exceptions.ResourceNotFoundException;
 import com.saikat.api.countryservice.models.Country;
+import com.saikat.api.countryservice.models.CountryDetails;
 import com.saikat.api.countryservice.properties.CountryApplicationProperties;
 import com.saikat.api.countryservice.repos.ExternalServiceRepo;
 import org.slf4j.Logger;
@@ -37,11 +38,11 @@ public class CountryServiceImpl implements CountryService {
      * @throws ResourceNotFoundException
      */
     @Override
-    public List<Country> fetchAllCountries() throws NoPropertiesDefinedException, ResourceNotFoundException {
+    public List<Country> fetchAllCountries() throws NoPropertiesDefinedException {
         final Optional<String> maybeProviderApi = Optional.ofNullable(properties.getAllCountriesApi());
         return maybeProviderApi.map(uri -> {
             if (uri.trim().equals("")) {
-                throw new ResourceNotFoundException("No uri defined for weather fetching All countries in configuration");
+                throw new ResourceNotFoundException("No uri defined for fetching All countries in configuration");
             } else {
                 try {
                     return Arrays.asList(externalServiceRepo.fetchFromExternalService(Country[].class, uri));
@@ -53,6 +54,33 @@ public class CountryServiceImpl implements CountryService {
                     throw new ResourceNotFoundException("Something wrong fetching all countries : " + e.getMessage());
                 }
             }
-        }).orElseThrow(() -> new NoPropertiesDefinedException("No uri defined for weather fetching All countries in configuration"));
+        }).orElseThrow(() -> new NoPropertiesDefinedException("No uri defined for fetching All countries in configuration"));
+    }
+
+    @Override
+    public CountryDetails fetchCountryDetails(final String countryName) throws NoPropertiesDefinedException {
+        final Optional<String> maybeProviderApi = Optional.ofNullable(properties.getCountryDetailsApi());
+        return maybeProviderApi.map(uri -> {
+            if (uri.trim().equals("")) {
+                throw new ResourceNotFoundException("No uri defined for weather fetching All countries in configuration");
+            } else {
+                try {
+                    final Optional<CountryDetails[]> maybeDetails =
+                            Optional.ofNullable(externalServiceRepo.fetchFromExternalService(CountryDetails[].class, uri, countryName));
+                    return maybeDetails.map(detailsArray -> {
+                        if (detailsArray.length > 0) {
+                            return detailsArray[0];
+                        }
+                        throw new ResourceNotFoundException("No details could be fetched for : " + countryName);
+                    }).orElseThrow(() -> new ResourceNotFoundException("Something wrong fetching all countries : "));
+                } catch (RestClientException re) {
+                    logger.error("RestClientException fetching details for : " + countryName, re);
+                    throw new ResourceNotFoundException("Exception fetching details for " + countryName + " : " + re.getMessage());
+                } catch (Exception e) {
+                    logger.error("Some Exception occurred fetching details for " + countryName, e);
+                    throw new ResourceNotFoundException("Something wrong fetching details for " + countryName + " : " + e.getMessage());
+                }
+            }
+        }).orElseThrow(() -> new NoPropertiesDefinedException("No uri defined for fetching country details in configuration"));
     }
 }

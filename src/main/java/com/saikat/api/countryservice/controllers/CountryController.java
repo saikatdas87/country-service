@@ -2,7 +2,9 @@ package com.saikat.api.countryservice.controllers;
 
 import com.saikat.api.countryservice.exceptions.NoPropertiesDefinedException;
 import com.saikat.api.countryservice.models.Country;
+import com.saikat.api.countryservice.models.CountryDetails;
 import com.saikat.api.countryservice.services.CountryService;
+import com.saikat.api.countryservice.validators.CountryNameValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,25 +21,28 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 public class CountryController {
 
-    Logger logger = LoggerFactory.getLogger(CountryController.class);
+    private Logger logger = LoggerFactory.getLogger(CountryController.class);
     private final CountryService countryService;
+    private final CountryNameValidation countryNameValidation;
 
     @Autowired
-    public CountryController(CountryService countryService) {
+    public CountryController(CountryService countryService, CountryNameValidation countryNameValidation) {
         this.countryService = countryService;
+        this.countryNameValidation = countryNameValidation;
     }
 
 
     @GetMapping("/countries")
     public List<Country> getAllCountries() throws NoPropertiesDefinedException {
-
         logger.debug("fetching all countries");
         return countryService.fetchAllCountries();
     }
 
     @GetMapping("/countries/{countryName}")
-    public String getNodeById(@PathVariable Optional<String> countryName) {
-        return null;
+    public CountryDetails getNodeById(@PathVariable @NotNull Optional<String> countryName) throws NoPropertiesDefinedException {
+        final String country = countryName.orElse("").trim();
+        countryNameValidation.validateCountryName(country);
+        return countryService.fetchCountryDetails(country);
     }
 
 }
