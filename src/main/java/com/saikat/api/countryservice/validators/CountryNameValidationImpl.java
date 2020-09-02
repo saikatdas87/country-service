@@ -6,19 +6,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class CountryNameValidationImpl implements CountryNameValidation {
 
-    private final String COUNTRY_REGEX = "^([A-Z][a-z]*)+(?:[\\s-][A-Z][a-z]*)*$";
-
+    /**
+     * Validates if country name provided is a valid one
+     *
+     * @param country name of the country to be validated
+     */
     @Override
     public void validateCountryName(String country) {
         if (country.trim().equals("")) {
             throw new InvalidDataException("country name can not be empty");
         }
-        final Boolean validName = country.matches(COUNTRY_REGEX);
 
-        if (!validName) {
+        final String countryRegex = "^([A-Z][a-z]*)+(?:[\\s-][A-Z][a-z]*)*$";
+        if (!country.matches(countryRegex)) {
             throw new InvalidDataException("Invalid country name provided : " + country);
         }
     }
-
-
 }

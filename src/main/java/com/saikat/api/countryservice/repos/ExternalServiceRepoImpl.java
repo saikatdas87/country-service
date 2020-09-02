@@ -17,7 +17,7 @@ import java.net.URI;
 @Service
 public class ExternalServiceRepoImpl implements ExternalServiceRepo {
 
-    Logger logger = LoggerFactory.getLogger(ExternalServiceRepoImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(ExternalServiceRepoImpl.class);
 
     private final RestTemplateBuilder restTemplateBuilder;
 

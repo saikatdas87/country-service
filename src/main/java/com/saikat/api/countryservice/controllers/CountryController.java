@@ -31,13 +31,25 @@ public class CountryController {
         this.countryNameValidation = countryNameValidation;
     }
 
-
+    /**
+     * The API GET method for fetching all countries
+     *
+     * @return List<Country> a list of Country objects
+     * @throws NoPropertiesDefinedException
+     */
     @GetMapping("/countries")
     public List<Country> getAllCountries() throws NoPropertiesDefinedException {
         logger.debug("fetching all countries");
         return countryService.fetchAllCountries();
     }
 
+    /**
+     * The API GET method for fetching some detailed info for a country
+     *
+     * @param countryName name of the country
+     * @return CountryDetails containing some details of the country
+     * @throws NoPropertiesDefinedException
+     */
     @GetMapping("/countries/{countryName}")
     public CountryDetails getNodeById(@PathVariable @NotNull Optional<String> countryName) throws NoPropertiesDefinedException {
         final String country = countryName.orElse("").trim();
