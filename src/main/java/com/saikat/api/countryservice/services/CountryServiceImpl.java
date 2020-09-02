@@ -71,8 +71,8 @@ public class CountryServiceImpl implements CountryService {
                         if (detailsArray.length > 0) {
                             return detailsArray[0];
                         }
-                        throw new ResourceNotFoundException("No details could be fetched for : " + countryName);
-                    }).orElseThrow(() -> new ResourceNotFoundException("Something wrong fetching all countries : "));
+                        throw new ResourceNotFoundException("No details could be fetched for " + countryName);
+                    }).orElseThrow(() -> new Exception("No Details found"));
                 } catch (RestClientException re) {
                     logger.error("RestClientException fetching details for : " + countryName, re);
                     throw new ResourceNotFoundException("Exception fetching details for " + countryName + " : " + re.getMessage());
