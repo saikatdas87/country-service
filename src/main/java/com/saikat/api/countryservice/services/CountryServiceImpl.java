@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 public class CountryServiceImpl implements CountryService {
 
-    Logger logger = LoggerFactory.getLogger(CountryServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CountryServiceImpl.class);
 
     private final ExternalServiceRepo externalServiceRepo;
     private final CountryApplicationProperties properties;
@@ -57,6 +57,13 @@ public class CountryServiceImpl implements CountryService {
         }).orElseThrow(() -> new NoPropertiesDefinedException("No uri defined for fetching All countries in configuration"));
     }
 
+    /**
+     * The mothod calls external API to fetch some details of the country
+     *
+     * @param countryName for which details is fetched
+     * @return CountryDetails contains some details
+     * @throws NoPropertiesDefinedException
+     */
     @Override
     public CountryDetails fetchCountryDetails(final String countryName) throws NoPropertiesDefinedException {
         final Optional<String> maybeProviderApi = Optional.ofNullable(properties.getCountryDetailsApi());

@@ -21,7 +21,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 public class CountryController {
 
-    private Logger logger = LoggerFactory.getLogger(CountryController.class);
+    private final Logger logger = LoggerFactory.getLogger(CountryController.class);
     private final CountryService countryService;
     private final CountryNameValidation countryNameValidation;
 
