@@ -64,7 +64,7 @@ To run and access the application with only please follow below commands
     mvn spring-boot:run
 ```
 
-Can be ran directly from IntelliJ IDEA by going to `com.saikat.code.stickynote.StickyNoteApplication` and clicking run.
+Can be ran directly from IntelliJ IDEA by going to `src/main/java/com/saikat/api/countryservice/CountryServiceApplication.java` and clicking run.
 
 Build Spring Boot Project with Maven
 
