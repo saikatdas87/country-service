@@ -34,14 +34,12 @@ public class CountryServiceImpl implements CountryService {
      * Method to fetch all countries calling external repo with the help of configured API
      *
      * @return List<Country> the list of countries
-     * @throws NoPropertiesDefinedException
-     * @throws ResourceNotFoundException
      */
     @Override
     public List<Country> fetchAllCountries() throws NoPropertiesDefinedException {
         final Optional<String> maybeProviderApi = Optional.ofNullable(properties.getAllCountriesApi());
         return maybeProviderApi.map(uri -> {
-            if (uri.trim().equals("")) {
+            if (uri.trim().isEmpty()) {
                 throw new ResourceNotFoundException("No uri defined for fetching All countries in configuration");
             } else {
                 try {
@@ -62,13 +60,12 @@ public class CountryServiceImpl implements CountryService {
      *
      * @param countryName for which details is fetched
      * @return CountryDetails contains some details
-     * @throws NoPropertiesDefinedException
      */
     @Override
     public CountryDetails fetchCountryDetails(final String countryName) throws NoPropertiesDefinedException {
         final Optional<String> maybeProviderApi = Optional.ofNullable(properties.getCountryDetailsApi());
         return maybeProviderApi.map(uri -> {
-            if (uri.trim().equals("")) {
+            if (uri.trim().isEmpty()) {
                 throw new ResourceNotFoundException("No uri defined for weather fetching All countries in configuration");
             } else {
                 try {
