@@ -78,10 +78,10 @@ public class CountryServiceImpl implements CountryService {
                         throw new ResourceNotFoundException("No details could be fetched for " + countryName);
                     }).orElseThrow(() -> new Exception("No Details found"));
                 } catch (RestClientException re) {
-                    logger.error("RestClientException fetching details for : " + countryName, re);
+                    logger.error("RestClientException fetching details for : {}", countryName, re);
                     throw new ResourceNotFoundException("Exception fetching details for " + countryName + " : " + re.getMessage());
                 } catch (Exception e) {
-                    logger.error("Some Exception occurred fetching details for " + countryName, e);
+                    logger.error("Some Exception occurred fetching details for {}", countryName, e);
                     throw new ResourceNotFoundException("Something wrong fetching details for " + countryName + " : " + e.getMessage());
                 }
             }
